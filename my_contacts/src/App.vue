@@ -1,6 +1,5 @@
 <script setup>
 import { useAuthStore } from "@/store/auth";
-
 const authStore = useAuthStore();
 </script>
 
@@ -61,12 +60,12 @@ const authStore = useAuthStore();
               <span><i class="fas fa-plus-circle fa-lg"></i></span>
             </a>
           </li>
-          <li v-if="authStore.users" class="nav-item me-3 me-lg-1">
+          <li v-if="authStore.isConnected" class="nav-item me-3 me-lg-1">
             <form @submit.prevent="authStore.logout">
               <button class="px-3 me-2 btn btn-primary">Logout</button>
             </form>
           </li>
-          <li v-if="!authStore.users" class="nav-item me-3 me-lg-1">
+          <li v-else class="nav-item me-3 me-lg-1">
             <router-link to="/login">
               <button
                 data-mdb-ripple-init
@@ -77,7 +76,7 @@ const authStore = useAuthStore();
               </button>
             </router-link>
           </li>
-          <li v-if="!authStore.users" class="nav-item me-3 me-lg-1">
+          <li v-if="!authStore.isConnected" class="nav-item me-3 me-lg-1">
             <router-link to="/register">
               <button
                 data-mdb-ripple-init
