@@ -1,3 +1,19 @@
+<script setup>
+import { useAuthStore } from "@/store/auth";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive } from "vue";
+
+const { message } = storeToRefs(useAuthStore());
+const { login } = useAuthStore();
+
+const formData = reactive({
+  email: "",
+  password: "",
+});
+
+onMounted(() => (message.value = {}));
+</script>
+
 <template>
   <section class="vh-100">
     <div class="container py-5 h-100">
@@ -10,25 +26,34 @@
           />
         </div>
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-          <form>
+          <form @submit.prevent="login(formData)">
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
               <input
                 type="email"
+                v-model="formData.email"
+                name="email"
                 id="form1Example13"
                 class="form-control form-control-lg"
                 placeholder="Email"
               />
+              <p v-if="message.email" class="error">
+                {{ message.email[0] }}
+              </p>
             </div>
 
             <!-- Password input -->
             <div data-mdb-input-init class="form-outline mb-4">
               <input
                 type="password"
+                v-model="formData.password"
                 id="form1Example23"
                 class="form-control form-control-lg"
                 placeholder="Password"
               />
+              <p v-if="message.password" class="error">
+                {{ message.password[0] }}
+              </p>
             </div>
 
             <div class="d-flex justify-content-around align-items-center mb-4">

@@ -36,7 +36,7 @@
               class="btn btn-outline-light btn-lg"
               href="#!"
               role="button"
-              >Call to action</a
+              >Créer un contact</a
             >
           </div>
         </div>

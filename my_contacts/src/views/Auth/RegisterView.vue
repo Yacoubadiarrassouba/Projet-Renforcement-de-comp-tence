@@ -1,5 +1,22 @@
+<script setup>
+import { useAuthStore } from "@/store/auth";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive } from "vue";
+
+const { message } = storeToRefs(useAuthStore());
+const { authenticate } = useAuthStore();
+
+const formData = reactive({
+  name: "",
+  email: "",
+  password: "",
+  confirm_password: "",
+});
+
+onMounted(() => (message.value = {}));
+</script>
+
 <template>
-  <!-- Registration 7 - Bootstrap Brain Component -->
   <section class="bg-light p-3 p-md-4 p-xl-5">
     <div class="container">
       <div class="row justify-content-center">
@@ -26,46 +43,41 @@
                   </div>
                 </div>
               </div>
-              <form action="#!">
+              <form @submit.prevent="authenticate(formData)">
                 <div class="row gy-3 overflow-hidden">
                   <div class="col-12">
                     <div class="form-floating mb-3">
                       <input
                         type="text"
-                        class="form-control"
-                        name="firstName"
-                        id="firstName"
-                        placeholder="First Name"
-                        required
-                      />
-                      <label for="firstName" class="form-label"
-                        >First Name</label
-                      >
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-floating mb-3">
-                      <input
-                        type="text"
+                        v-model="formData.name"
                         class="form-control"
                         name="lastName"
                         id="lastName"
                         placeholder="First Name"
                         required
                       />
-                      <label for="lastName" class="form-label">Last Name</label>
+                      <p v-if="message.name" class="error">
+                        {{ message.name[0] }}
+                      </p>
+                      <label for="lastName" class="form-label">
+                        Enter Name
+                      </label>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="form-floating mb-3">
                       <input
                         type="email"
+                        v-model="formData.email"
                         class="form-control"
                         name="email"
                         id="email"
                         placeholder="name@example.com"
                         required
                       />
+                      <p v-if="message.email" class="error">
+                        {{ message.email[0] }}
+                      </p>
                       <label for="email" class="form-label">Email</label>
                     </div>
                   </div>
@@ -73,6 +85,7 @@
                     <div class="form-floating mb-3">
                       <input
                         type="password"
+                        v-model="formData.password"
                         class="form-control"
                         name="password"
                         id="password"
@@ -80,7 +93,30 @@
                         placeholder="Password"
                         required
                       />
+                      <p v-if="message.password" class="error">
+                        {{ message.password[0] }}
+                      </p>
                       <label for="password" class="form-label">Password</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-floating mb-3">
+                      <input
+                        type="password"
+                        v-model="formData.confirm_password"
+                        class="form-control"
+                        name="password"
+                        id="password"
+                        value=""
+                        placeholder="Password"
+                        required
+                      />
+                      <p v-if="message.confirm_password" class="error">
+                        {{ message.confirm_password[0] }}
+                      </p>
+                      <label for="password" class="form-label">
+                        Confirm password
+                      </label>
                     </div>
                   </div>
                   <div class="col-12">

@@ -1,3 +1,9 @@
+<script setup>
+import { useAuthStore } from "@/store/auth";
+
+const authStore = useAuthStore();
+</script>
+
 <template>
   <!-- <nav>
     <router-link to="/">Home</router-link> |
@@ -55,7 +61,12 @@
               <span><i class="fas fa-plus-circle fa-lg"></i></span>
             </a>
           </li>
-          <li class="nav-item me-3 me-lg-1">
+          <li v-if="authStore.users" class="nav-item me-3 me-lg-1">
+            <form @submit.prevent="authStore.logout">
+              <button class="px-3 me-2 btn btn-primary">Logout</button>
+            </form>
+          </li>
+          <li v-if="!authStore.users" class="nav-item me-3 me-lg-1">
             <router-link to="/login">
               <button
                 data-mdb-ripple-init
@@ -66,7 +77,7 @@
               </button>
             </router-link>
           </li>
-          <li class="nav-item me-3 me-lg-1">
+          <li v-if="!authStore.users" class="nav-item me-3 me-lg-1">
             <router-link to="/register">
               <button
                 data-mdb-ripple-init
