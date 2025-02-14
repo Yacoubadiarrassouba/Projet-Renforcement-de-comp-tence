@@ -1,3 +1,25 @@
+<script setup>
+import { usePostsStore } from "@/store/posts";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive, ref } from "vue";
+
+const { errors } = storeToRefs(usePostsStore());
+const { getAllPosts, createPost } = usePostsStore();
+const posts = ref([]);
+
+onMounted(async () => (posts.value = await getAllPosts()));
+
+const formData = reactive({
+  firstname: "",
+  lastname: "",
+  phone: "",
+  email: "",
+  gender: "",
+  birthdate: "",
+  position: "",
+  company: "",
+});
+</script>
 <template>
   <header>
     <!-- Navbar -->
@@ -29,8 +51,8 @@
       <div class="mask">
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="text-white">
-            <h1 class="mb-3">Heading</h1>
-            <h4 class="mb-3">Subheading</h4>
+            <h1 class="mb-3">MyContacts</h1>
+            <h4 class="mb-3"></h4>
             <!-- <a
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg"
@@ -80,10 +102,31 @@
             ></button>
           </div>
           <div class="modal-body p-4">
-            <form>
+            <form @submit.prevent="createPost(formData)">
               <!-- Nom input -->
               <div data-bs-input-init class="form-outline mb-4">
-                <input type="text" placeholder="Nom" class="form-control" />
+                <input
+                  type="text"
+                  placeholder="Firstname"
+                  v-model="formData.firstname"
+                  class="form-control"
+                />
+                <p v-if="errors.firstname" class="error">
+                  {{ errors.firstname[0] }}
+                </p>
+              </div>
+
+              <!-- Nom input -->
+              <div data-bs-input-init class="form-outline mb-4">
+                <input
+                  type="text"
+                  placeholder="Lastname"
+                  v-model="formData.lastname"
+                  class="form-control"
+                />
+                <p v-if="errors.lastname" class="error">
+                  {{ errors.lastname[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
@@ -91,18 +134,38 @@
                 <input
                   type="number"
                   placeholder="Téléphone"
+                  v-model="formData.phone"
                   class="form-control"
                 />
+                <p v-if="errors.phone" class="error">
+                  {{ errors.phone[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
               <div data-bs-input-init class="form-outline mb-4">
-                <input type="email" placeholder="Email" class="form-control" />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  v-model="formData.email"
+                  class="form-control"
+                />
+                <p v-if="errors.email" class="error">
+                  {{ errors.email[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
               <div data-bs-input-init class="form-outline mb-4">
-                <input type="text" placeholder="Genre" class="form-control" />
+                <input
+                  type="text"
+                  placeholder="Genre"
+                  v-model="formData.gender"
+                  class="form-control"
+                />
+                <p v-if="errors.gender" class="error">
+                  {{ errors.gender[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
@@ -110,8 +173,12 @@
                 <input
                   type="date"
                   placeholder="Birthdate"
+                  v-model="formData.birthdate"
                   class="form-control"
                 />
+                <p v-if="errors.birthdate" class="error">
+                  {{ errors.birthdate[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
@@ -119,13 +186,25 @@
                 <input
                   type="text"
                   placeholder="Position"
+                  v-model="formData.position"
                   class="form-control"
                 />
+                <p v-if="errors.position" class="error">
+                  {{ errors.position[0] }}
+                </p>
               </div>
 
               <!-- Nom input -->
               <div data-bs-input-init class="form-outline mb-4">
-                <input type="text" placeholder="Company" class="form-control" />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  v-model="formData.company"
+                  class="form-control"
+                />
+                <p v-if="errors.company" class="error">
+                  {{ errors.company[0] }}
+                </p>
               </div>
 
               <!-- Submit button -->
@@ -143,5 +222,30 @@
       </div>
     </div>
     <!-- Modal -->
+  </div>
+
+  <div v-if="posts.length > 0" class="container row py-5">
+    <div
+      v-for="post in posts"
+      :key="post._id"
+      class="card border-primary m-3 col-md-3"
+      style="max-width: 18rem"
+    >
+      <div class="card-header">Contact</div>
+      <div class="card-body text-primary">
+        <h4 class="card-title">{{ post.firstname }}</h4>
+        <p class="card-text">{{ post.position }}</p>
+        <h5>{{ post.email }}</h5>
+        <p class="card-text">{{ post.phone }}</p>
+      </div>
+      <div class="card-body">
+        <router-link :to="{ name: 'update', params: { _id: post._id } }">
+          <a href="#" class="btn btn-primary m-3">Modifier</a>
+        </router-link>
+        <router-link>
+          <a href="#" class="btn btn-danger">Supprimer</a>
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
